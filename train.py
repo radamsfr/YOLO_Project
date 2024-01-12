@@ -70,7 +70,7 @@ def train(train_loader, model, optimizer, loss_fn):
     
 
 '''CHANGE IMG DIR TRAIN AND VAL TO FILE DIRECTORY'''
-'''CHNAGE ANN DIR TRAIN AND VAL TO FILE DIRECTORY'''
+'''CHANGE ANN DIR TRAIN AND VAL TO FILE DIRECTORY'''
 img_dir_train = '../CocoData/train2017'
 ann_dir_train = '../CocoData/annotations/instances_train2017.json'
 
