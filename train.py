@@ -11,10 +11,12 @@ from dataset import COCOData
 import utils
 from loss import YoloLoss
 import sys
+import time
 
 seed = 123
 torch.manual_seed(seed)
 
+'''SET SEE IMAGES TO TRUE TO SEE IMAGE WITH BBOX'''
 see_images = False
 
 # Hyperparameters
@@ -25,6 +27,8 @@ weight_decay = 0
 epochs = 3
 num_workers = 3
 pin_memory = True
+
+'''SET LOAD MODEL TO TRUE TO LOAD'''
 load_model = False
 LOAD_MODEL_FILE = 'overfit.pth.tar'
 
@@ -65,11 +69,10 @@ def train(train_loader, model, optimizer, loss_fn):
     print(f'Mean loss was {sum(mean_loss)/len(mean_loss)}')
     
 
-# img_dir_train = '../CocoData/train2017'
-# ann_dir_train = '../CocoData/annotations/instances_train2017.json'
-
-img_dir_train = '../CocoData/val2017'
-ann_dir_train = '../CocoData/annotations/instances_val2017.json'
+'''CHANGE IMG DIR TRAIN AND VAL TO FILE DIRECTORY'''
+'''CHNAGE ANN DIR TRAIN AND VAL TO FILE DIRECTORY'''
+img_dir_train = '../CocoData/train2017'
+ann_dir_train = '../CocoData/annotations/instances_train2017.json'
 
 img_dir_val = '../CocoData/val2017'
 ann_dir_val = '../CocoData/annotations/instances_val2017.json'
@@ -107,6 +110,14 @@ def main():
         mean_avg_precision = utils.mean_average_precision(pred_boxes, target_boxes, num_classes=90, box_format='midpoint')
         
         print(f'Train mAP {mean_avg_precision}')
+        
+        if mean_avg_precision > 0.9:
+            checkpoint = {
+                'state_dict': model.state_dict(),
+                'optimizer': optimizer.state_dict(),
+            }
+            utils.save_checkpoint(checkpoint, filename=LOAD_MODEL_FILE)
+            time.sleep(10)
         
         train(train_loader, model, optimizer, loss_fn)
        
